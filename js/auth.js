@@ -3,6 +3,33 @@ var OAUTH2_SCOPES = [
     'https://www.googleapis.com/auth/youtube'
 ];
 
+$(document).ready(function () {
+   $('#logoff').click(logout);
+});
+
+function logout() {
+    var token = gapi.auth.getToken();
+    if (token)
+    {
+        var accessToken = gapi.auth.getToken().access_token;
+        if (accessToken)
+        {
+            $.ajax({
+                'url': 'https://accounts.google.com/o/oauth2/revoke?token=' + accessToken,
+                'async': true,
+                'method': 'GET',
+                'success':function(data){
+                    $('.pre-auth').show();
+                    $('.post-auth').hide();
+                }
+            });
+        }
+    }
+    gapi.auth.setToken(null);
+    gapi.auth.signOut();
+    console.log("signing off");
+}
+
 googleApiClientReady = function() {
     gapi.auth.init(function() {
         window.setTimeout(checkAuth, 1);
