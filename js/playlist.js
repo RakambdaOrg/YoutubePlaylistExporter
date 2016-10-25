@@ -1,26 +1,28 @@
+$(document).ready(function(){
+   $('#load-container').hide();
+});
+
 function handleAPILoaded() {
     requestUserUploadsPlaylistId();
 }
 
 function exportPlaylists(id) {
-    $('.playlist-button').each(function () {
-        $(this).hide();
-    });
+    $('#playlist-container').hide();
+    $('#load-container').show();
     getVideosLinks(id, function (result) {
+        $('#load-container').hide();
         var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(result));
-        var a = document.createElement('a');
-        a.href = 'data:' + data;
-        a.download = 'data.json';
-        a.innerHTML = 'download JSON';
+        var button = document.createElement('button');
+        button.innerHTML = '<a class="downloadJSON" download="data.json" href="data:' + data + '">Download JSON</a>';
         var container = document.getElementById('download-container');
-        container.appendChild(a);
+        container.appendChild(button);
     });
 }
 
 function requestUserUploadsPlaylistId() {
    getPlaylists(function (result) {
        $.each(result, function(index, item) {
-           $('#playlist-container').append('<p><button type="button" class="playlist-button" id="' + item.id + '">' + item.title + '</button></p>');
+           $('#playlist-container').append('<p class="playlistContainer"><button type="button" class="playlist-button" id="' + item.id + '">' + item.title + '</button></p>');
            $('#' + item.id).click(function () {
                exportPlaylists($(this).attr('id'));
            })
@@ -42,7 +44,7 @@ function getPlaylists(callback, pageToken)
     }
     var request = gapi.client.youtube.playlists.list(requestOptions);
     request.execute(function(response) {
-        console.log(response);
+        //console.log(response);
         var nextPageToken = response.result.nextPageToken;
         var playlistItems = response.result.items;
         var playlists = [];
@@ -84,7 +86,7 @@ function getVideosLinks(playlistId, callback, pageToken) {
     }
     var request = gapi.client.youtube.playlistItems.list(requestOptions);
     request.execute(function(response) {
-        console.log(response);
+        //console.log(response);
         var nextPageToken = response.result.nextPageToken;
         var playlistItems = response.result.items;
         var links = [];
