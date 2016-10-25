@@ -64,6 +64,9 @@ function getPlaylists(callback, pageToken)
         }
         else
         {
+            playlists.sort(function(a, b){
+               return a.title.localeCompare(b.title);
+            });
             callback(playlists);
         }
     }, function (error) {
