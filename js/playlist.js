@@ -20,7 +20,9 @@ function exportPlaylists(id) {
 }
 
 function requestUserUploadsPlaylistId() {
+    $('#load-container').show();
    getPlaylists(function (result) {
+       $('#load-container').hide();
        $.each(result, function(index, item) {
            $('#playlist-container').append('<p class="playlistContainer"><button type="button" class="playlist-button" id="' + item.id + '">' + item.title + '</button></p>');
            $('#' + item.id).click(function () {
