@@ -40,7 +40,7 @@ function getPlaylists(callback, pageToken) {
 		maxResults: 50
 	};
 	if (pageToken) {
-		requestOptions.pagetoken = pageToken;
+		requestOptions.pageToken = pageToken;
 		console.log("Page token is " + pageToken);
 	}
 	var request = gapi.client.youtube.playlists.list(requestOptions);
@@ -54,8 +54,8 @@ function getPlaylists(callback, pageToken) {
 				playlists.push({id: playlistItems[i].id, title: playlistItems[i].snippet.title});
 			}
 		}
-		if (nextPageToken) {
-			getVideosLinks(function (result) {
+		if (nextPageToken && nextPageToken !== pageToken) {
+			getPlaylists(function (result) {
 				playlists.push.apply(playlists, result);
 				callback(playlists);
 			}, nextPageToken);
@@ -95,7 +95,7 @@ function getVideosLinks(playlistId, callback, pageToken) {
 				links.push(playlistItems[i].snippet.resourceId.videoId);
 			}
 		}
-		if (nextPageToken) {
+		if (nextPageToken && nextPageToken !== pageToken) {
 			getVideosLinks(playlistId, function (result) {
 				links.push.apply(links, result);
 				callback(links);
