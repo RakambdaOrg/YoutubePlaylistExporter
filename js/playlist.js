@@ -46,25 +46,29 @@ function getPlaylists(callback, pageToken) {
 	var request = gapi.client.youtube.playlists.list(requestOptions);
 	request.execute(function (response) {
 		//console.log(response);
-		var nextPageToken = response.result.nextPageToken;
-		var playlistItems = response.result.items;
-		var playlists = [];
-		if (playlistItems) {
-			for (var i = 0; i < playlistItems.length; i += 1) {
-				playlists.push({id: playlistItems[i].id, title: playlistItems[i].snippet.title});
+		if (response.statusCode === 200) {
+			var nextPageToken = response.result.nextPageToken;
+			var playlistItems = response.result.items;
+			var playlists = [];
+			if (playlistItems) {
+				for (var i = 0; i < playlistItems.length; i += 1) {
+					playlists.push({id: playlistItems[i].id, title: playlistItems[i].snippet.title});
+				}
 			}
-		}
-		if (nextPageToken && nextPageToken !== pageToken) {
-			getPlaylists(function (result) {
-				playlists.push.apply(playlists, result);
+			if (nextPageToken && nextPageToken !== pageToken) {
+				getPlaylists(function (result) {
+					playlists.push.apply(playlists, result);
+					callback(playlists);
+				}, nextPageToken);
+			}
+			else {
+				playlists.sort(function (a, b) {
+					return a.title.localeCompare(b.title);
+				});
 				callback(playlists);
-			}, nextPageToken);
-		}
-		else {
-			playlists.sort(function (a, b) {
-				return a.title.localeCompare(b.title);
-			});
-			callback(playlists);
+			}
+		} else {
+			callback([]);
 		}
 	}, function (error) {
 		console.log("Error:");
