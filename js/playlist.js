@@ -46,7 +46,7 @@ function getPlaylists(callback, pageToken) {
 	var request = gapi.client.youtube.playlists.list(requestOptions);
 	request.execute(function (response) {
 		//console.log(response);
-		if (response.statusCode === 200) {
+		if (response.result) {
 			var nextPageToken = response.result.nextPageToken;
 			var playlistItems = response.result.items;
 			var playlists = [];
