@@ -26,6 +26,8 @@ function logout() {
 	gapi.auth.setToken(null);
 	gapi.auth.signOut();
 	console.log("signing off");
+	$('#logoff').hide();
+	$('#login-container').show();
 }
 
 googleApiClientReady = function () {
