@@ -1,0 +1,22 @@
+version: 2
+registries:
+  dockerhub:
+    type: docker-registry
+    url: https://registry.hub.docker.com
+    username: ${{ secrets.DOCKER_USERNAME }}
+    password: ${{ secrets.DOCKER_TOKEN }}
+    replaces-base: true
+
+updates:
+  - package-ecosystem: "docker"
+    directory: "/"
+    assignees:
+      - "Rakambda"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Europe/Paris"
+    pull-request-branch-name:
+      separator: "-"
+    registries:
+      - dockerhub
